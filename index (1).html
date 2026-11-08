@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Informatika Komputama</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: satu kolom editorial. Logo di puncak, judul jurusan, bidang kajian,
+   grid 6 prestasi wisudawan ke-5, lalu tiga pengembang. Halaman admin ada di #admin-login. */
+:root {
+  --bg: #F2F5FA;
+  --surface: #FFFFFF;
+  --fg: #0E2038;
+  --muted: #55657C;
+  --line: #D5DDEA;
+  --accent: #1F5FD1;
+  --accent-ink: #FFFFFF;
+  --mark: #D99A12;
+  --ph-a: #E3EAF6;
+  --ph-b: #CDD9EE;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A1322; --surface: #111D32; --fg: #E5ECF7; --muted: #94A5BE; --line: #223250;
+    --accent: #78A8FF; --accent-ink: #0A1322; --mark: #F0B93A; --ph-a: #16253F; --ph-b: #1D3052;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A1322; --surface: #111D32; --fg: #E5ECF7; --muted: #94A5BE; --line: #223250;
+  --accent: #78A8FF; --accent-ink: #0A1322; --mark: #F0B93A; --ph-a: #16253F; --ph-b: #1D3052;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+  padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+.wrap { max-width: 1080px; margin-inline: auto; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.1; }
+p { margin: 0; }
+.label { font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+
+/* Hero */
+.hero { padding-block: 56px 64px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 20px; }
+.logo { width: 96px; height: 96px; display: grid; place-items: center; }
+.logo img { width: 100%; height: 100%; object-fit: contain; }
+.logo svg { width: 100%; height: 100%; }
+.univ { display: flex; flex-direction: column; gap: 2px; }
+.univ strong { font-family: var(--font-display); font-size: 20px; font-weight: 700; letter-spacing: .01em; }
+.hero h1 { font-size: clamp(44px, 9vw, 92px); font-weight: 700; letter-spacing: -.025em; margin-top: 12px; }
+.hero h1 span { color: var(--accent); }
+.hero .lead { max-width: 60ch; color: var(--muted); font-size: 18px; }
+.hero .tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 4px; }
+.chip { font-family: var(--font-mono); font-size: 12px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--muted); }
+
+/* Section heads */
+section { padding-block: 56px; border-top: 1px solid var(--line); }
+.sec-head { display: grid; gap: 10px; margin-bottom: 32px; max-width: 62ch; }
+.sec-head h2 { font-size: clamp(28px, 4.5vw, 44px); font-weight: 700; letter-spacing: -.015em; }
+.sec-head p { color: var(--muted); }
+.sec-head .label::before { content: ""; display: inline-block; width: 22px; height: 2px; background: var(--mark); vertical-align: middle; margin-right: 10px; }
+
+/* Informasi jurusan */
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); overflow: hidden; }
+.field { padding: 24px; display: grid; gap: 8px; align-content: start; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 0 -1px -1px 0; }
+.field h3 { font-size: 20px; font-weight: 500; }
+.field p { color: var(--muted); font-size: 15px; }
+
+/* Prestasi */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 24px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.photo { aspect-ratio: 4 / 3; max-width: 100%; position: relative; background: linear-gradient(135deg, var(--ph-a), var(--ph-b)); display: grid; place-items: center; color: var(--muted); }
+.photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.photo .ph { display: grid; justify-items: center; gap: 8px; font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.photo .ph svg { width: 34px; height: 34px; }
+.card-body { padding: 20px 22px 24px; display: grid; gap: 8px; }
+.card-body h3 { font-size: 22px; font-weight: 500; }
+.card-body p { color: var(--muted); font-size: 15px; }
+.card { cursor: pointer; }
+.more { justify-self: start; margin-top: 6px; border: 0; background: transparent; color: var(--accent); font: inherit; font-family: var(--font-mono); font-size: 13px; padding: 4px 0; cursor: pointer; }
+.more:hover { text-decoration: underline; }
+/* Kartu prestasi: tinggi sama, teks ringkas maksimal 4 baris */
+.card-body { flex: 1; grid-template-rows: auto auto 1fr auto; }
+.card-body p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; overflow: hidden; min-height: 6.4em; }
+#m-body { display: grid; gap: 12px; }
+.modal-text p { white-space: pre-line; }
+.dev h3 a { color: inherit; text-decoration: none; }
+.dev h3 a:hover { color: var(--accent); text-decoration: underline; }
+
+/* Jendela detail prestasi */
+.modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; background: rgba(8, 14, 26, .62); padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.modal-panel { position: relative; width: 100%; max-width: 720px; max-height: 100%; overflow: auto; background: var(--surface); color: var(--fg); border: 1px solid var(--line); border-radius: 14px; }
+.modal-panel .photo { border-radius: 0; }
+.modal-text { padding: 24px 28px 32px; display: grid; gap: 12px; }
+.modal-text h2 { font-size: clamp(26px, 5vw, 36px); font-weight: 700; letter-spacing: -.015em; }
+.modal-text p { color: var(--muted); max-width: 62ch; }
+.modal-close { position: absolute; top: 12px; right: 12px; z-index: 2; border: 1px solid var(--line); background: var(--surface); color: var(--fg); font: inherit; font-size: 13px; padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+.modal-close:hover { border-color: var(--accent); }
+@media (max-width: 520px) { .modal-text { padding: 20px; } }
+
+/* Pengembang */
+.team { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+.dev { display: grid; gap: 16px; min-width: 0; }
+.dev .photo { aspect-ratio: 4 / 5; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+.dev h3 { font-size: 22px; font-weight: 500; }
+.dev .role { font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-top: 4px; }
+.dev p { color: var(--muted); font-size: 15px; margin-top: 8px; }
+
+/* Footer */
+footer { border-top: 1px solid var(--line); padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px)); display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; align-items: center; color: var(--muted); font-size: 14px; }
+footer a { font-family: var(--font-mono); font-size: 13px; }
+
+/* Admin login */
+.login-view { min-height: 100svh; display: grid; place-items: center; padding-block: 40px; }
+.login { width: 100%; max-width: 420px; display: grid; gap: 28px; }
+.login-head { display: grid; gap: 14px; justify-items: start; }
+.login-head .logo { width: 56px; height: 56px; }
+.login-head h1 { font-size: clamp(32px, 7vw, 40px); font-weight: 700; letter-spacing: -.02em; }
+.login-head p { color: var(--muted); }
+form { display: grid; gap: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 26px; }
+.row { display: grid; gap: 6px; }
+.row label { font-size: 14px; font-weight: 500; }
+.input { display: flex; align-items: stretch; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+.input:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+.input input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--fg); font: inherit; padding: 12px 14px; outline: none; }
+.input button { border: 0; background: transparent; color: var(--muted); font: inherit; font-family: var(--font-mono); font-size: 12px; padding: 0 14px; cursor: pointer; border-radius: 0 8px 8px 0; }
+.input button:hover { color: var(--fg); }
+.opts { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
+.opts label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.opts input { accent-color: var(--accent); width: 16px; height: 16px; }
+.btn { border: 0; background: var(--accent); color: var(--accent-ink); font: inherit; font-weight: 500; padding: 13px 18px; border-radius: 8px; cursor: pointer; }
+.btn:hover { filter: brightness(1.08); }
+.msg { font-size: 14px; min-height: 1.4em; }
+.msg.err { color: #C0392B; }
+.msg.info { color: var(--muted); }
+:root[data-theme="dark"] .msg.err { color: #FF8F80; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .msg.err { color: #FF8F80; } }
+.back { font-size: 14px; }
+
+/* Dasbor admin */
+.admin { padding-block: 40px 64px; display: grid; gap: 28px; }
+.admin-top { display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center; }
+.admin-top h1 { font-size: clamp(30px, 6vw, 44px); font-weight: 700; letter-spacing: -.02em; }
+.btn-line { border: 1px solid var(--line); background: var(--surface); color: var(--fg); font: inherit; padding: 10px 16px; border-radius: 8px; cursor: pointer; }
+.btn-line:hover { border-color: var(--accent); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; display: grid; gap: 4px; }
+.stat b { font-family: var(--font-display); font-size: 36px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.tbl-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
+tr:last-child td { border-bottom: 0; }
+.ok { color: var(--accent); }
+.warn { color: var(--mark); }
+
+@media (max-width: 520px) {
+  .hero { padding-block: 40px 48px; }
+  .field { padding: 20px; }
+  form { padding: 20px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .card, .btn { transition: transform .2s ease, border-color .2s ease, filter .2s ease; }
+  .card:hover { transform: translateY(-3px); border-color: var(--accent); }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap" id="view-home">
+  <header class="hero">
+    <div class="logo" data-logo></div>
+    <div class="univ">
+      <strong>Universitas Komputama</strong>
+      <span class="label">Cilacap</span>
+    </div>
+    <h1>Teknik <span>Informatika</span></h1>
+    <p class="lead">Program studi yang membekali mahasiswa dengan dasar komputasi, keterampilan membangun perangkat lunak, dan kebiasaan memecahkan masalah nyata dengan teknologi.</p>
+    <div class="tags" aria-label="Topik utama">
+      <span class="chip">Pemrograman</span>
+      <span class="chip">Keamanan siber</span>
+      <span class="chip">Sistem informasi geografis</span>
+      <span class="chip">Rekayasa perangkat lunak</span>
+    </div>
+  </header>
+
+  <section id="jurusan" aria-labelledby="h-jurusan">
+    <div class="sec-head">
+      <span class="label">Tentang jurusan</span>
+      <h2 id="h-jurusan">Apa yang dipelajari di Teknik Informatika</h2>
+      <p>Mahasiswa belajar dari logika pemrograman sampai membangun sistem utuh, lalu mengujinya lewat proyek, magang, dan kompetisi.</p>
+    </div>
+    <div class="fields">
+      <div class="field"><span class="label">Bidang 1</span><h3>Pemrograman &amp; Web</h3><p>Algoritma, struktur data, basis data, dan pengembangan aplikasi web serta mobile.</p></div>
+      <div class="field"><span class="label">Bidang 2</span><h3>Keamanan Siber</h3><p>Jaringan, kriptografi dasar, uji penetrasi, dan cara melindungi sistem dari serangan.</p></div>
+      <div class="field"><span class="label">Bidang 3</span><h3>Data &amp; Geospasial</h3><p>Pengolahan data spasial, pemetaan digital, dan visualisasi informasi wilayah.</p></div>
+      <div class="field"><span class="label">Bidang 4</span><h3>Rekayasa Sistem</h3><p>Analisis kebutuhan, perancangan, pengujian, dan pemeliharaan sistem informasi.</p></div>
+    </div>
+  </section>
+
+  <section id="prestasi" aria-labelledby="h-prestasi">
+    <div class="sec-head">
+      <span class="label">Wisuda ke-5</span>
+      <h2 id="h-prestasi">Prestasi wisudawan Universitas Komputama</h2>
+      <p>Enam jalur yang ditempuh wisudawan Teknik Informatika, dari keamanan siber sampai kewirausahaan mahasiswa.</p>
+    </div>
+    <div class="grid" id="prestasi-grid"></div>
+  </section>
+
+  <section id="pengembang" aria-labelledby="h-dev">
+    <div class="sec-head">
+      <span class="label">Tim</span>
+      <h2 id="h-dev">Pengembang halaman ini</h2>
+      <p>Tiga orang yang merancang, membangun, dan mengisi konten situs jurusan.</p>
+    </div>
+    <div class="team" id="team-grid"></div>
+  </section>
+
+  <div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="m-title">
+    <div class="modal-panel">
+      <button class="modal-close" id="m-close" type="button">Tutup</button>
+      <div id="m-photo"></div>
+      <div class="modal-text">
+        <span class="label">Wisuda ke-5</span>
+        <h2 id="m-title"></h2>
+        <div id="m-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>© 2026 Teknik Informatika, Universitas Komputama Cilacap</span>
+    <a href="#admin-login">Login admin</a>
+  </footer>
+</div>
+
+<main class="wrap login-view" id="view-login" hidden>
+  <div class="login">
+    <div class="login-head">
+      <div class="logo" data-logo></div>
+      <span class="label">Teknik Informatika · Komputama</span>
+      <h1>Masuk admin</h1>
+      <p>Kelola prestasi wisudawan dan data tim pengembang situs jurusan.</p>
+    </div>
+    <form id="login-form" novalidate>
+      <div class="row">
+        <label for="user">Email atau nama pengguna</label>
+        <div class="input"><input id="user" name="user" type="text" autocomplete="username" required></div>
+      </div>
+      <div class="row">
+        <label for="pass">Kata sandi</label>
+        <div class="input">
+          <input id="pass" name="pass" type="password" autocomplete="current-password" required>
+          <button type="button" id="toggle-pass" aria-controls="pass" aria-pressed="false">Tampilkan</button>
+        </div>
+      </div>
+      <div class="opts">
+        <label for="remember"><input id="remember" type="checkbox"> Ingat saya</label>
+        <span>Lupa sandi? Hubungi super admin.</span>
+      </div>
+      <p class="msg info" id="login-msg" role="status" aria-live="polite"></p>
+      <button class="btn" type="submit">Masuk</button>
+    </form>
+    <a class="back" href="#">← Kembali ke beranda</a>
+  </div>
+</main>
+
+<main class="wrap admin" id="view-admin" hidden>
+  <div class="admin-top">
+    <div>
+      <span class="label">Teknik Informatika · Komputama</span>
+      <h1>Dasbor admin</h1>
+    </div>
+    <button class="btn-line" type="button" id="logout">Keluar</button>
+  </div>
+  <div class="stats">
+    <div class="stat"><span class="label">Prestasi</span><b id="st-prestasi">0</b></div>
+    <div class="stat"><span class="label">Pengembang</span><b id="st-tim">0</b></div>
+    <div class="stat"><span class="label">Foto terisi</span><b id="st-foto">0</b></div>
+  </div>
+  <div>
+    <h2 style="font-size:24px;margin-bottom:12px">Prestasi wisudawan ke-5</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Prestasi</th><th>Foto</th><th>Penjelasan</th></tr></thead>
+        <tbody id="admin-rows"></tbody>
+      </table>
+    </div>
+    <p class="msg info" style="margin-top:12px">Dasbor ini menampilkan ringkasan. Untuk mengubah teks atau foto, edit daftar PRESTASI di index.html.</p>
+  </div>
+</main>
+
+<script>
+/* ===== Isi di sini: ganti dengan file asli ===== */
+const LOGO_SRC = "foto/logo-komputama.png";
+/* Tiap prestasi: photo = alamat gambar, detail = daftar paragraf yang tampil saat kartu diklik. */
+const PRESTASI = [
+  { key: "cyber",  title: "Cyber Security",       text: "Prayoga Gymnastiar, S.Kom., CAPC. Perkuat Keamanan Siber Nasional Lewat Penemuan Kerentanan di Berbagai Institusi Strategis\n\nCILACAP, 8 November 2026 – Dalam upaya mendorong ekosistem digital yang aman dan tangguh, peneliti keamanan siber Indonesia, Prayoga Gymnastiar, S.Kom., CAPC., terus mencatatkan kontribusi nyata melalui program pengungkapan kerentanan sistem (Vulnerability Disclosure Program). Berbagai apresiasi dan penghargaan resmi berhasil diraih dari institusi penyiaran, perguruan tinggi, lembaga pemerintah, hingga otoritas keamanan siber nasional.\n\nDedikasi tersebut dibuktikan dengan serangkaian sertifikat penghargaan dan pengakuan resmi yang diterima atas pelaporan celah keamanan secara etis (ethical hacking/white hat) sepanjang periode 2023 hingga 2026, di antaranya:\n\n1. TRANS TV (09 Oktober 2023)\n2. STITMAS (18 Desember 2023)\n3. Universitas Hamzanwadi (23 September 2024)\n4. Universitas Sanata Dharma (24 Juni 2025)\n5. BSSN RI (20 Agustus 2025)\n6. RSUD Majenang (09 September 2025)\n7. Pengadilan Agama Bukittinggi (22 Desember 2025)\n8. STIPAS Tahasak Danum Pambelum Keuskupan Palangkaraya (19 Januari 2026)\n9. Poltekkes Kemenkes Semarang (04 Februari 2026)\n10. STIA Pembangunan Jember (02 April 2026)\n11. Institut Teknologi Bandung / ITB (18 Juni 2026)\n12. CILACAPKAB-CSIRT (24 Juni 2026)\n\nPengungkapan kerentanan (vulnerability disclosure) ini bertujuan untuk membantu pengelola sistem informasi mengidentifikasi serta memitigasi potensi celah keamanan sebelum dimanfaatkan oleh pihak tak bertanggung jawab. Langkah ini juga mendukung penguatan mitigasi risiko pada infrastruktur informasi vital di sektor pelayanan publik, pendidikan, maupun media.\n\n\"Peningkatan kesadaran dan kolaborasi antara peneliti independen dengan para pengelola sistem merupakan kunci utama dalam menjaga kedaulatan data dan ruang siber Indonesia,\" ujar Prayoga Gymnastiar, S.Kom., CAPC.\n\nMelalui konsistensi ini, diharapkan sinergi antara white hat hacker, pemerintah, dan berbagai instansi terus terjalin erat demi menciptakan iklim teknologi informasi yang aman, tepercaya, dan siap menghadapi ancaman siber yang kian kompleks.", photo: "foto/cyber-security.png.jpeg",
+    detail: ["Tulis di sini nama wisudawan, bidang keamanan yang ditekuni, dan capaian yang diraih.", "Tambahkan nama kompetisi atau sertifikasi, tahun, serta peringkat bila ada.", "Paragraf ketiga bisa berisi cerita singkat proses belajar dan dampaknya."] },
+  { key: "geo",    title: "Web Geospasial",       text: "Mahasiswa STMIK Komputama Majenang Lolos Semifinal Nasional Dalam Kompetisi Mapid Competition WebGis 2025. Selamat Kepada : 1. Prayoga Gymnastiar (Teknik Informatika 22) 2. Agus Sudarmanto (Teknik Informatika 22) 3. Syaiful Akbar Rizqi Mubarok (Teknik Informatika 22) ", photo: "foto/geo.png.jpg",
+    detail: ["Tulis di sini nama wisudawan dan proyek pemetaan yang dikerjakan.", "Jelaskan data yang dipetakan, teknologi yang dipakai, dan siapa penggunanya.", "Tambahkan tautan atau penghargaan bila ada."] },
+  { key: "sistem", title: "Pengembangan Sistem",  text: "Kolaborasi pengembangan sistem digital bersama Agus Sudarmanto, S.Kom., yang mencakup pembuatan website produk desa, website properti desa, website surat desa, dan sistem arsip Letter C di Desa Ciporos. Sedangkan Prayoga Gymnastiar, S.Kom., CAPC. dalam pembangunan alat keamanan siber dan uji penetrasi (penetration testing) di RSUD Majenang.", photo: "foto/Pengembangan.png.jpeg",
+    detail: ["Tulis di sini nama wisudawan dan sistem yang dibangun.", "Jelaskan masalah yang diselesaikan, teknologi yang dipakai, dan hasilnya.", "Sebut instansi atau mitra bila sistem dipakai di dunia nyata."] },
+  { key: "kampus", title: "Kampus Mengajar",      text: "Prayoga Gymnastiar, S.Kom., CAPC. dan Nuraini, S.Kom. berhasil lolos program Kampus Mengajar Angkatan 7, sedangkan Firdaus Sari Asta, S.Kom. dan Shakira Zahra Rianti, S.Kom. berhasil lolos program Kampus Mengajar Angkatan 8.", photo: "foto/KM.png",
+    detail: ["Tulis di sini nama wisudawan, angkatan program, dan sekolah penempatan.", "Ceritakan kegiatan yang dilakukan selama penugasan.", "Tambahkan dampak yang dirasakan sekolah dan siswa."] },
+  { key: "p2mw",   title: "P2MW",                 text: "Shakirra Zahrarianti, S.Kom. dan Firdaus Sari Asta, S.Kom. berhasil meraih Juara 1 KRENOVA (Kreativitas dan Inovasi) 2026 Kabupaten Cilacap melalui inovasi pengolahan klobot jagung menjadi produk bernilai jual tinggi secara berkelanjutan.\n\nSelain itu, Firdaus Sari Asta, S.Kom. juga meraih juara dalam Indonesia Green Jobs Initiative Competition 2026 tingkat nasional dengan solusi ekonomi hijau berkelanjutan, mengungguli peserta dari berbagai perguruan tinggi ternama seperti BINUS, Universitas Ciputra, ITB, dan IPB.\n\nPada program P2MW, Ifan Fatahlilah, S.Kom. dan Nuraini, S.Kom. mengembangkan inovasi 'Banasentra' berbasis pelepah pisang. Sementara itu, P2MW Produk Fashion dari kain perca diinisiasi oleh Retno Kinansih, S.Kom., Rizqa Nur Fadlilah, S.Kom., dan Shakira Zahra Rianti, S.Kom.", photo: "foto/p2mw.png",
+    detail: ["Tulis di sini nama wisudawan dan nama usaha atau produk yang dikembangkan.", "Jelaskan model usaha, pendanaan yang diterima, dan tahun program.", "Tambahkan capaian seperti jumlah pengguna atau penjualan bila ada."] },
+  { key: "centive",title: "Centive",              text: "Prayoga Gymnastiar, S.Kom., CAPC. dan Nuraini, S.Kom. sebagai peneliti keamanan siber pada acara National Conference on Electrical Engineering, Informatics, Industrial Technology, And Creative Media (NEITIC) 2024 di Telkom University Purwokerto.", photo: "foto/centive.png",
+    detail: ["Tulis di sini nama wisudawan dan peran dalam program Centive.", "Jelaskan karya atau proyek yang dihasilkan.", "Tambahkan hasil akhir, penghargaan, atau tindak lanjutnya."] }
+];
+const TIM = [
+  { name: "Prayoga Gymnastiar, S.Kom., CAPC.", role: "Cyber Security",     text: "Merancang tampilan dan menulis kode .", photo: "foto/pengembang1.jpeg", link: "https://www.instagram.com/yogagymn?psln=MWo1dXpvMjhpeXNnMA==" },
+  { name: "Puja Dian Saputri", role: "Frontend", text: "Menyiapkan autentikasi admin dan penyimpanan data prestasi.", photo: "foto/Pengembang2.jpeg", link: "https://www.instagram.com/pujaadiiann_?cplk=NjIzeWRvbXk3YWg0" },
+  { name: "Nur Faiz", role: "Backend", text: "Mengumpulkan foto, menyusun teks prestasi, dan memeriksa kebenaran data.", photo: "foto/Pengembang3.png", link: "https://www.instagram.com/nrffaiz__?srtk=enpqZHQ3bGZubTY0" }
+];
+/* Akun admin. Ganti kata sandi dengan cara di README (hasilkan hash baru). */
+const ADMIN_USER = "admin";
+const ADMIN_HASH = "c8ef6c7ca60faa16a45ad4b95a5e26682572a1436d83d3427bd9c3a97b7bb1de"; // SHA-256 dari kata sandi
+/* =============================================== */
+
+const ICON_IMG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M4 18l5-5 4 4 3-3 4 4"/></svg>';
+const LOGO_FALLBACK = '<svg viewBox="0 0 96 96" role="img" aria-label="Lambang sementara Universitas Komputama"><path d="M48 6l36 14v26c0 22-15 38-36 44C27 84 12 68 12 46V20z" fill="var(--accent)"/><path d="M30 34v20c0 8 5 12 12 12s12-4 12-12V34" fill="none" stroke="var(--accent-ink)" stroke-width="5" stroke-linecap="round"/><path d="M58 34v32M58 50l12-16M58 50l12 16" fill="none" stroke="var(--mark)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+function photoBox(src, label) {
+  if (src) return '<div class="photo"><img src="' + src + '" alt="' + label + '" loading="lazy"></div>';
+  return '<div class="photo" role="img" aria-label="Tempat foto ' + label + '"><div class="ph">' + ICON_IMG + '<span>Foto ' + label + '</span></div></div>';
+}
+
+document.querySelectorAll("[data-logo]").forEach(function (el) {
+  el.innerHTML = LOGO_SRC ? '<img src="' + LOGO_SRC + '" alt="Logo Universitas Komputama Cilacap">' : LOGO_FALLBACK;
+});
+
+document.getElementById("prestasi-grid").innerHTML = PRESTASI.map(function (p, i) {
+  return '<article class="card" data-i="' + i + '">' + photoBox(p.photo, p.title) +
+    '<div class="card-body"><span class="label">Wisuda ke-5</span><h3>' + p.title + '</h3><p>' + p.text + '</p>' +
+    '<button class="more" type="button" data-i="' + i + '" aria-haspopup="dialog">Lihat selengkapnya →</button></div></article>';
+}).join("");
+
+/* Jendela detail prestasi */
+var modal = document.getElementById("modal"), lastTrigger = null;
+function openModal(i, trigger) {
+  var p = PRESTASI[i];
+  lastTrigger = trigger || null;
+  document.getElementById("m-photo").innerHTML = photoBox(p.photo, p.title);
+  document.getElementById("m-title").textContent = p.title;
+  document.getElementById("m-body").innerHTML = String(p.text).split(/\n\s*\n/).map(function (t) { return "<p>" + t + "</p>"; }).join("");
+  modal.hidden = false;
+  document.body.style.overflow = "hidden";
+  document.getElementById("m-close").focus();
+}
+function closeModal() {
+  modal.hidden = true;
+  document.body.style.overflow = "";
+  if (lastTrigger) { lastTrigger.focus(); }
+}
+document.getElementById("prestasi-grid").addEventListener("click", function (e) {
+  var card = e.target.closest(".card");
+  if (card) { openModal(Number(card.dataset.i), card.querySelector(".more")); }
+});
+document.getElementById("m-close").addEventListener("click", closeModal);
+modal.addEventListener("click", function (e) { if (e.target === modal) { closeModal(); } });
+document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !modal.hidden) { closeModal(); } });
+
+document.getElementById("team-grid").innerHTML = TIM.map(function (d) {
+  return '<article class="dev">' + photoBox(d.photo, d.name) +
+    '<div><h3>' + (d.link ? '<a href="' + d.link + '" target="_blank" rel="noopener noreferrer">' + d.name + '</a>' : d.name) + '</h3><div class="role">' + d.role + '</div><p>' + d.text + '</p></div></article>';
+}).join("");
+
+/* Rute berbasis hash */
+var home = document.getElementById("view-home"), login = document.getElementById("view-login"), adminView = document.getElementById("view-admin");
+function isAuthed() { try { return sessionStorage.getItem("ukc-admin") === "1"; } catch (e) { return false; } }
+function setAuthed(on) { try { if (on) { sessionStorage.setItem("ukc-admin", "1"); } else { sessionStorage.removeItem("ukc-admin"); } } catch (e) {} }
+function renderAdmin() {
+  var filled = PRESTASI.filter(function (p) { return p.photo; }).length + TIM.filter(function (d) { return d.photo; }).length;
+  document.getElementById("st-prestasi").textContent = PRESTASI.length;
+  document.getElementById("st-tim").textContent = TIM.length;
+  document.getElementById("st-foto").textContent = filled + " / " + (PRESTASI.length + TIM.length);
+  document.getElementById("admin-rows").innerHTML = PRESTASI.map(function (p) {
+    return "<tr><td>" + p.title + "</td><td class=\"" + (p.photo ? "ok" : "warn") + "\">" + (p.photo ? "Terisi" : "Belum ada") +
+      "</td><td>" + ((p.detail && p.detail.length) ? p.detail.length + " paragraf" : "Belum ada") + "</td></tr>";
+  }).join("");
+}
+function route() {
+  var h = location.hash;
+  if (h === "#dasbor-admin" && !isAuthed()) { location.hash = "#admin-login"; return; }
+  if (h === "#admin-login" && isAuthed()) { location.hash = "#dasbor-admin"; return; }
+  var showLogin = h === "#admin-login", showAdmin = h === "#dasbor-admin";
+  home.hidden = showLogin || showAdmin; login.hidden = !showLogin; adminView.hidden = !showAdmin;
+  if (showAdmin) { renderAdmin(); }
+  if (showLogin || showAdmin) { window.scrollTo(0, 0); }
+  else if (h && document.querySelector(h)) { document.querySelector(h).scrollIntoView(); }
+}
+document.getElementById("logout").addEventListener("click", function () { setAuthed(false); location.hash = "#"; route(); });
+window.addEventListener("hashchange", route);
+route();
+
+/* Form login */
+var form = document.getElementById("login-form"), msg = document.getElementById("login-msg");
+var pass = document.getElementById("pass"), toggle = document.getElementById("toggle-pass");
+toggle.addEventListener("click", function () {
+  var show = pass.type === "password";
+  pass.type = show ? "text" : "password";
+  toggle.textContent = show ? "Sembunyikan" : "Tampilkan";
+  toggle.setAttribute("aria-pressed", String(show));
+});
+var fails = 0, lockedUntil = 0;
+async function sha256(text) {
+  var buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+}
+async function handleLogin(user, password) {
+  msg.className = "msg info";
+  var wait = Math.ceil((lockedUntil - Date.now()) / 1000);
+  if (wait > 0) { msg.className = "msg err"; msg.textContent = "Terlalu banyak percobaan. Coba lagi dalam " + wait + " detik."; return; }
+  if (!window.crypto || !crypto.subtle) {
+    msg.className = "msg err";
+    msg.textContent = "Browser memblokir pemeriksaan sandi. Buka situs lewat https atau localhost.";
+    return;
+  }
+  var hash = await sha256(password);
+  if (user.toLowerCase() === ADMIN_USER && hash === ADMIN_HASH) {
+    fails = 0; form.reset(); msg.textContent = "";
+    setAuthed(true);
+    location.hash = "#dasbor-admin";
+    route();
+    return;
+  }
+  fails += 1;
+  if (fails >= 5) { lockedUntil = Date.now() + 30000; fails = 0; }
+  msg.className = "msg err";
+  msg.textContent = "Nama pengguna atau kata sandi salah.";
+}
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+  var u = form.user.value.trim(), p = form.pass.value;
+  if (!u || !p) {
+    msg.className = "msg err";
+    msg.textContent = !u ? "Isi email atau nama pengguna." : "Isi kata sandi.";
+    (!u ? form.user : form.pass).focus();
+    return;
+  }
+  handleLogin(u, p);
+});
+</script>
+</body>
+</html>
